@@ -56,9 +56,8 @@ class TaskItemAdapter : RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder>
         }
     */
     class TaskItemViewHolder(val rootView: CardView) : RecyclerView.ViewHolder(rootView) {
-        //get references to the layout's text view and checkbox
-        val taskName = rootView.findViewById<TextView>(R.id.task_name)
-        val taskDone = rootView.findViewById<CheckBox>(R.id.task_done)
+        //set binding so we can reference views
+        private val binding = TaskItemBinding.bind(rootView)
 
         //creating this inside a companion object means that it can be called without first creating a TaskItemViewHolder object
         companion object {
@@ -72,8 +71,8 @@ class TaskItemAdapter : RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder>
 
         fun bind(item: Task) {
             //add the task name to the layout's root view (a text view)
-            taskName.text = item.taskName
-            taskDone.isChecked = item.taskDone
+            binding.taskName.text = item.taskName
+            binding.taskDone.isChecked = item.taskDone
         }
     }
 }
