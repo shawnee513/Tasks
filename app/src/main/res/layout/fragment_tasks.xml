@@ -23,12 +23,15 @@
         android:text="save task"
         android:layout_gravity="center_horizontal"/>
 <!-- the layout manager specifies how the items will be positioned
-    in this case, a vertical list with full-length rows-->
+    in this case, a vertical list with full-length rows
+    other options are GridLayoutManager, StaggeredGridLayoutManater
+    spanCount specifies the number of columns-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tasks_rv_task_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_gravity="top"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"/>
 </LinearLayout>

@@ -2,10 +2,11 @@ package com.example.tasks
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.tasks.TaskItemAdapter.Companion.inflateFrom
-import com.example.tasks.TaskItemAdapter.TaskItemViewHolder.TaskItemViewHolder.Companion.inflateFrom
+import com.example.tasks.databinding.TaskItemBinding
 
 class TaskItemAdapter : RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder>() {
     var data = listOf<Task>()
@@ -48,13 +49,22 @@ class TaskItemAdapter : RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder>
                 return TaskItemViewHolder(view)
             }
         }
+
+        fun bind(item: Task) {
+            //add the task name to the layout's root view (a text view)
+            rootView.text = item.taskName
+        }
     */
-    class TaskItemViewHolder(val rootView: TextView) : RecyclerView.ViewHolder(rootView) {
+    class TaskItemViewHolder(val rootView: CardView) : RecyclerView.ViewHolder(rootView) {
+        //get references to the layout's text view and checkbox
+        val taskName = rootView.findViewById<TextView>(R.id.task_name)
+        val taskDone = rootView.findViewById<CheckBox>(R.id.task_done)
+
         //creating this inside a companion object means that it can be called without first creating a TaskItemViewHolder object
         companion object {
             fun inflateFrom(parent: ViewGroup): TaskItemViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val view = layoutInflater.inflate(R.layout.task_item, parent, false) as TextView
+                val view = layoutInflater.inflate(R.layout.task_item, parent, false) as CardView
                 //The method inflates the item's layout, and uses it to create a TaskItemViewHolder
                 return TaskItemViewHolder(view)
             }
@@ -62,7 +72,8 @@ class TaskItemAdapter : RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder>
 
         fun bind(item: Task) {
             //add the task name to the layout's root view (a text view)
-            rootView.text = item.taskName
+            taskName.text = item.taskName
+            taskDone.isChecked = item.taskDone
         }
     }
 }
