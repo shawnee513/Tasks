@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase
 //version is an Int that specified the version. in this case 1, since this is the first version of the database
 //Note** the version number needs to be updated if the database entity files are modified. If the schema changes without updating the version number, the app will crash when ran
 //exportSchema tells Room whether to export the database schema into a folder so that you can record its version history.
-@Database(entities = [Task::class], version = 1, exportSchema = false)
+@Database(entities = [Task::class], version = 3, exportSchema = false)
 abstract class TaskDatabase  : RoomDatabase(){
     //specify any interfaces(marked with @Dao) that will be used for data access. Add a property for each interface.
     abstract val taskDao: TaskDao
