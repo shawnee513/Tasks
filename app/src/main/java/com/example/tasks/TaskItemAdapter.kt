@@ -4,19 +4,23 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tasks.databinding.TaskItemBinding
 
 //the way of doing it using DiffUtil
-class TaskItemAdapter : ListAdapter<Task, TaskItemAdapter.TaskItemViewHolder>(TaskDiffItemCallback()){
+//to make items clickable, taskItemAdapter will accept a clickListener from the fragment
+//and will pass it to onBindViewHolder
+//this makes the fragment responsible for what happens when the item is clicked
+class TaskItemAdapter(val clickListener: (taskId: Long) -> Unit) : ListAdapter<Task, TaskItemAdapter.TaskItemViewHolder>(TaskDiffItemCallback()){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
         : TaskItemViewHolder = TaskItemViewHolder.inflateFrom(parent)
 
     override fun onBindViewHolder(holder: TaskItemViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        holder.bind(item, clickListener)
     }
 
     class TaskItemViewHolder(val rootView: CardView) : RecyclerView.ViewHolder(rootView) {
@@ -33,10 +37,13 @@ class TaskItemAdapter : ListAdapter<Task, TaskItemAdapter.TaskItemViewHolder>(Ta
             }
         }
 
-        fun bind(item: Task) {
+        fun bind(item: Task, clickListener: (taskId: Long) -> Unit) {
             //add the task name to the layout's root view (a text view)
             binding.taskName.text = item.taskName
             binding.taskDone.isChecked = item.taskDone
+
+            //make the item resond to clicks
+            binding.root.setOnClickListener { clickListener(item.taskId) }
         }
     }
 }

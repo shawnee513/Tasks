@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.tasks.databinding.FragmentTasksBinding
@@ -36,7 +37,10 @@ class TasksFragment : Fragment() {
         viewModel.tasksString.observe(viewLifecycleOwner, Observer {tasks -> binding.taskTvTaskList.text = tasks})
 */
         //connect the adapter to the recycler view
-        val adapter = TaskItemAdapter()
+        //the lambda function being passed specified what happens when the item is clicked
+        val adapter = TaskItemAdapter{ taskId ->
+            Toast.makeText(context, "Clicked task $taskId", Toast.LENGTH_SHORT).show()
+        }
         binding.tasksRvTaskList.adapter = adapter
 
         //observe tasks and give to adapter
