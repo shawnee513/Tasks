@@ -42,7 +42,10 @@ class TasksFragment : Fragment() {
         //observe tasks and give to adapter
         viewModel.tasks.observe(viewLifecycleOwner, Observer {
             it?.let {
-                adapter.data = it
+                //the way of doing it before using DiffUtil
+                /*adapter.data = it*/
+                //now the way to do it using DiffUtil - passing new data to the adapter's backing list
+                adapter.submitList(it)
             }
         })
 

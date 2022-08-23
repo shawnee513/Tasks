@@ -5,14 +5,53 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tasks.databinding.TaskItemBinding
 
+//the way of doing it using DiffUtil
+class TaskItemAdapter : ListAdapter<Task, TaskItemAdapter.TaskItemViewHolder>(TaskDiffItemCallback()){
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
+        : TaskItemViewHolder = TaskItemViewHolder.inflateFrom(parent)
+
+    override fun onBindViewHolder(holder: TaskItemViewHolder, position: Int) {
+        val item = getItem(position)
+        holder.bind(item)
+    }
+
+    class TaskItemViewHolder(val rootView: CardView) : RecyclerView.ViewHolder(rootView) {
+        //set binding so we can reference views
+        private val binding = TaskItemBinding.bind(rootView)
+
+        //creating this inside a companion object means that it can be called without first creating a TaskItemViewHolder object
+        companion object {
+            fun inflateFrom(parent: ViewGroup): TaskItemViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val view = layoutInflater.inflate(R.layout.task_item, parent, false) as CardView
+                //The method inflates the item's layout, and uses it to create a TaskItemViewHolder
+                return TaskItemViewHolder(view)
+            }
+        }
+
+        fun bind(item: Task) {
+            //add the task name to the layout's root view (a text view)
+            binding.taskName.text = item.taskName
+            binding.taskDone.isChecked = item.taskDone
+        }
+    }
+}
+
+//the way of doing it before using DiffUtil
+/*
 class TaskItemAdapter : RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder>() {
     var data = listOf<Task>()
     set(value) {
         field = value
         //this tells the recycler view that the data has changed
+        //although, it is inefficient, especially for large data sets, because recycler view will
+        //redraw all of its views anytime the data changes
+        //it is more efficient to use DiffUtil - which compares the old dataset with the new data
+        //set and tells the recycler view of what to change
         notifyDataSetChanged()
     }
 
@@ -37,7 +76,8 @@ class TaskItemAdapter : RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder>
 
     //set the view holder
     //view holders are usually tied to a single adapter, so we are defining it as an inner class, but it doesn't have to be
-    /*
+    */
+/*
     This was when the root view was a textview. we updated it to use a cardview instead
     class TaskItemViewHolder(val rootView: TextView) : RecyclerView.ViewHolder(rootView) {
     //creating this inside a companion object means that it can be called without first creating a TaskItemViewHolder object
@@ -54,7 +94,8 @@ class TaskItemAdapter : RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder>
             //add the task name to the layout's root view (a text view)
             rootView.text = item.taskName
         }
-    */
+    *//*
+
     class TaskItemViewHolder(val rootView: CardView) : RecyclerView.ViewHolder(rootView) {
         //set binding so we can reference views
         private val binding = TaskItemBinding.bind(rootView)
@@ -75,4 +116,4 @@ class TaskItemAdapter : RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder>
             binding.taskDone.isChecked = item.taskDone
         }
     }
-}
+}*/
