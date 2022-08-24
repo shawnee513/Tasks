@@ -1,9 +1,7 @@
 package com.example.tasks
 
 import android.util.Log
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 
 class TasksViewModel (val dao: TaskDao) : ViewModel() {
@@ -11,6 +9,10 @@ class TasksViewModel (val dao: TaskDao) : ViewModel() {
 
     //we will now make tasks public
     val tasks = dao.getAll()
+
+    //property which will have taskId and will navigate to editTaskFragment when it changes
+    private val _navigateToTask = MutableLiveData<Long?>()
+    val navigateToTask: LiveData<Long?> get() = _navigateToTask
 
     /*//get the records from the database and transform them
     //we only used this code before we added a recycler view
@@ -49,6 +51,15 @@ class TasksViewModel (val dao: TaskDao) : ViewModel() {
             Log.i("test", "inserted task and completed function")
         }
     }
+
+    fun onTaskClicked(taskId: Long){
+        _navigateToTask.value = taskId
+    }
+
+    fun onTaskNavigated(){
+        _navigateToTask.value = null
+    }
+
     //no longer need these
     /*//formats a list of tasks as a String.
     fun formatTasks(tasks: List<Task>): String {

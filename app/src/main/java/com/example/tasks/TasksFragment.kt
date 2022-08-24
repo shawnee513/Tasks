@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.tasks.databinding.FragmentTasksBinding
 
 class TasksFragment : Fragment() {
@@ -20,6 +21,7 @@ class TasksFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.i("test", "now in TasksFragment")
         binding = FragmentTasksBinding.inflate(inflater)
 
         //build the database if it doesn't already exist and get a reference to the taskDao property
@@ -39,7 +41,7 @@ class TasksFragment : Fragment() {
         //connect the adapter to the recycler view
         //the lambda function being passed specified what happens when the item is clicked
         val adapter = TaskItemAdapter{ taskId ->
-            Toast.makeText(context, "Clicked task $taskId", Toast.LENGTH_SHORT).show()
+            viewModel.onTaskClicked(taskId)
         }
         binding.tasksRvTaskList.adapter = adapter
 
@@ -50,6 +52,17 @@ class TasksFragment : Fragment() {
                 /*adapter.data = it*/
                 //now the way to do it using DiffUtil - passing new data to the adapter's backing list
                 adapter.submitList(it)
+            }
+        })
+
+        //observe to know when to navigate
+        viewModel.navigateToTask.observe(viewLifecycleOwner, Observer { taskId ->
+            //taskId? makes it so the block of code will only run if taskId is not null
+            taskId?.let {
+                Log.i("test", "navigating to task id: $taskId")
+                val action = TasksFragmentDirections.actionTasksFragmentToEditTaskFragment(taskId)
+                this.findNavController().navigate(action)
+                viewModel.onTaskNavigated()
             }
         })
 
